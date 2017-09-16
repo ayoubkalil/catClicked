@@ -1,0 +1,33 @@
+#container{
+	width:1024px;
+	margin:0 auto;
+	padding:20px;
+}
+
+#container > div{
+	border:1px solid #333;
+	border-radius:5px;
+	margin : 10px auto;
+	width: 320px;
+	text-align:center;
+}
+
+#container > div p.catName{
+	font-size:16;
+	font-family: sans-serif;
+	color:#333;
+	text-transform: capitalize;
+	font-weight: bold;
+}
+
+#container > div img.catImg{
+ 	width:300px;
+ 	height: auto;
+}
+
+#container > div p.counter{
+	background: #333;
+	color:#fff;
+	margin:10px 0 0 0;
+	line-height: 30px
+}
