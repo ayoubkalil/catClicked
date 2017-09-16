@@ -31,3 +31,29 @@
 	margin:10px 0 0 0;
 	line-height: 30px
 }
+
+#catList {
+	margin:20px auto;
+	list-style: none;
+	padding:10px;
+	width:31%;
+	border-bottom:2px #aaa solid;
+}
+
+#catList li{
+	margin-left:8px;
+	display: inline-block;
+	text-transform: uppercase;
+	font-size:16;
+	font-family: sans-serif;
+	color:#333;
+	cursor: pointer;
+}
+
+#catList li:after{
+	content:' - ';
+}
+
+#catList li:nth-child(n+5):after{
+	content:'';
+}
