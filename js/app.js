@@ -90,20 +90,6 @@ var catListView = {
             // make a new cat list item and set its text
             elem = document.createElement('li');
             elem.textContent = cat.name;
-
-            // on click, setCurrentCat and render the catView
-            // (this uses our closure-in-a-loop trick to connect the value
-            //  of the cat variable to the click event function)
-
-            // model.arr.push(
-            //     (function(catCopy){
-            //         return function() {
-            //         controller.setCurrentCat(catCopy);
-            //         catView.render();
-            //         console.log(catCopy.name);
-            //         }
-            //     }(cat))
-            // );
             
             elem.addEventListener('click', (function(catCopy) {
                 return function() {
@@ -127,7 +113,7 @@ var catListView = {
 
 			// add event listener to the image for counting the clicks of the current image 
 			this.img.addEventListener('click', function(){
-					console.log(controller.getCats());
+					// console.log(controller.getCats());
 					controller.clickCounter();	
 			},false);
 
