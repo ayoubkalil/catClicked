@@ -1,73 +1,146 @@
 (function(){
-	var cats = [{
-			name: "Kitty",
-			alt: "Kitty",
-			src: "img/cat1.jpg",
-			counter : 0
-	},{
-			name: "Tiger",
-			alt: "Tiger",
-			src: "img/cat2.jpg",
-			counter : 0
-	},{
-			name: "Milo",
-			alt: "Milo",
-			src: "img/cat3.jpg",
-			counter : 0
-	},{
-			name: "Daisy",
-			alt: "Daisy",
-			src: "img/cat4.jpg",
-			counter : 0
-	},{
-			name: "Luna",
-			alt: "Luna",
-			src: "img/cat5.jpg",
-			counter : 0
-	}
-	];
 
-	
-
-	var catList = document.getElementById("catList"),
-		counterSelector = document.querySelector('#cat .counter'),
-		name = document.querySelector('#cat .catName'),
-		currentCat = cats[0],
-		img = document.querySelector('#cat .catImg');
-
-
-	for(i = 0 ; i<cats.length ; i++){
-		
-		var	cat = cats[i],
-			
-
-		// create cat list 
-		elem = document.createElement('li');
-		elem.innerText = cat.name;
-		catList.appendChild(elem);
+/* ----------------- the Model ---------------- */
+var	model = {
+		cats : [
+		{
+				name: "Kitty",
+				alt: "Kitty",
+				src: "img/cat1.jpg",
+				counter : 0
+		},
+		{
+				name: "Tiger",
+				alt: "Tiger",
+				src: "img/cat2.jpg",
+				counter : 0
+		},
+		{
+				name: "Milo",
+				alt: "Milo",
+				src: "img/cat3.jpg",
+				counter : 0
+		},
+		{
+				name: "Daisy",
+				alt: "Daisy",
+				src: "img/cat4.jpg",
+				counter : 0
+		},
+		{
+				name: "Luna",
+				alt: "Luna",
+				src: "img/cat5.jpg",
+				counter : 0
+		}
+		],
+		currentCat : null
+};
 
 
-		// add event listener to each list item to display the cat 
-		elem.addEventListener("click",(function(catCl){
-			return function(){
-				name.innerText = catCl.name;
-				img.src = catCl.src;
-				img.alt = catCl.alt;
-				counterSelector.innerText = catCl.counter;
-				currentCat = catCl;
-			}
-		})(cat),false);
-	
+/* ----------------- the Controller ---------------- */
+var	controller = {
+		init: function(){
+
+			this.setCurrentCat(model.cats[0]);
+			catListView.init();
+			catView.init();
+		},
+		setCurrentCat:function(cat){
+			model.currentCat = cat;
+		},
+		getCurrentCat:function(){
+			return model.currentCat;
+		},
+		clickCounter:function(){
+			this.getCurrentCat().counter++;
+			catView.render();
+		},
+		getCats:function(){
+			return model.cats;
 		}
 
-	// add event listener to the image for counting the clicks of the current image 
-	img.addEventListener('click',function(){
-			currentCat.counter++;
-			counterSelector.innerText = currentCat.counter;	
-		},false);
+};
 
-	name.innerText = cats[0].name;
-	img.src = cats[0].src;
-	img.alt = cats[0].alt;
-	counterSelector.innerText = cats[0].counter;
+/* ----------------- the View of List of cats ---------------- */
+
+var catListView = {
+
+    init: function() {
+        // store the DOM element for easy access later
+        this.catListElem = document.getElementById('catList');
+
+        // render this view (update the DOM elements with the right values)
+        this.render();
+    },
+
+    render: function() {
+        var cat, elem, i;
+        // get the cats we'll be rendering from the controller
+        var cats = controller.getCats();
+
+        // empty the cat list
+        this.catListElem.innerHTML = '';
+
+        // loop over the cats
+        for (i = 0; i < cats.length; i++) {
+            // this is the cat we're currently looping over
+            cat = cats[i];
+
+            // make a new cat list item and set its text
+            elem = document.createElement('li');
+            elem.textContent = cat.name;
+
+            // on click, setCurrentCat and render the catView
+            // (this uses our closure-in-a-loop trick to connect the value
+            //  of the cat variable to the click event function)
+
+            // model.arr.push(
+            //     (function(catCopy){
+            //         return function() {
+            //         controller.setCurrentCat(catCopy);
+            //         catView.render();
+            //         console.log(catCopy.name);
+            //         }
+            //     }(cat))
+            // );
+            
+            elem.addEventListener('click', (function(catCopy) {
+                return function() {
+                    controller.setCurrentCat(catCopy);
+                    catView.render();
+                };
+            })(cat));
+
+            // finally, add the element to the list
+            this.catListElem.appendChild(elem);
+        }
+    }
+};
+/* ----------------- the View of the current Cat ---------------- */
+
+	catView = {
+		init: function(){
+		 	this.counterSelector = document.querySelector('#cat .counter');
+			this.name = document.querySelector('#cat .catName');
+			this.img = document.querySelector('#cat .catImg');
+
+			// add event listener to the image for counting the clicks of the current image 
+			this.img.addEventListener('click', function(){
+					console.log(controller.getCats());
+					controller.clickCounter();	
+			},false);
+
+			this.render();
+		},
+		render : function(){
+			var currentCatX = controller.getCurrentCat();
+			this.name.textContent = currentCatX.name;
+			this.img.src = currentCatX.src;
+			this.img.alt = currentCatX.alt;
+			this.counterSelector.textContent = currentCatX.counter;
+		}
+	}
+
+	controller.init();
 })();
