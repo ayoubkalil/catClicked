@@ -1,5 +1,4 @@
 # Cat Clicked Pro
 
-just learning Js paterns and that's the version without MVC 
+just learning Js paterns and that's the implementation of MVC Patern
 
-MVC soon ... 
