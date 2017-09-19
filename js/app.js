@@ -34,18 +34,16 @@ var	model = {
 				counter : 0
 		}
 		],
-		currentCat : null
+		currentCat : null,
+		addCat : function(cat){
+			this.cats.push(cat);
+		}
 };
 
 
 /* ----------------- the Controller ---------------- */
 var	controller = {
-		init: function(){
-
-			this.setCurrentCat(model.cats[0]);
-			catListView.init();
-			catView.init();
-		},
+		
 		setCurrentCat:function(cat){
 			model.currentCat = cat;
 		},
@@ -58,6 +56,61 @@ var	controller = {
 		},
 		getCats:function(){
 			return model.cats;
+		},
+		addCatToList:function(){
+
+			var name = document.getElementById("catNameInput"),
+				image = document.getElementById("catImgInput"),
+				clicks = document.getElementById("catCounterInput"),
+				frm = document.getElementById('adminPanel-form');
+			
+			name = name.value || 'Unnamed';
+			image = image.value || 'img/no-thumb.png';
+			clicks = clicks.value || 0;
+			model.addCat({name:name,
+				alt:name,
+				src:image,
+				counter:clicks
+			});
+
+
+		   	frm.reset();  // Reset
+
+			catListView.render();
+			model.currentCat = model.cats[model.cats.length - 1];
+			catView.render();
+
+		   
+		},
+		init: function(){
+			
+			this.adminButton = document.getElementById("admin");
+			this.saveButton = document.getElementById("save");
+			this.cancelButton = document.getElementById("cancel");
+			adminView.init();
+			adminView.hide();
+			
+
+			this.adminButton.addEventListener("click",function(e){
+					adminView.render();
+					e.preventDefault();
+			},false);
+
+			this.saveButton.addEventListener("click",(function(callback){
+				return function(e){
+					callback();
+					e.preventDefault();
+				}
+			})(this.addCatToList),false);
+
+			this.cancelButton.addEventListener("click",function(e){
+				adminView.hide();
+				e.preventDefault();
+			},false);
+
+			this.setCurrentCat(model.cats[0]);
+			catListView.init();
+			catView.init();
 		}
 
 };
@@ -105,7 +158,7 @@ var catListView = {
 };
 /* ----------------- the View of the current Cat ---------------- */
 
-	catView = {
+var	catView = {
 		init: function(){
 		 	this.counterSelector = document.querySelector('#cat .counter');
 			this.name = document.querySelector('#cat .catName');
@@ -127,6 +180,21 @@ var catListView = {
 			this.counterSelector.textContent = currentCatX.counter;
 		}
 	}
+
+/* ----------------- Panel Admin View ---------------- */
+
+var	adminView = {
+		init : function(){
+			this.adminPanel = document.getElementById('adminPanel');
+		},
+		render:function(){
+			this.adminPanel.style.display = "block";
+		},
+		hide:function(){
+			this.adminPanel.style.display = "none";
+		}
+	}
+
 
 	controller.init();
 })();
